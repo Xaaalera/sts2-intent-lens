@@ -1,0 +1,10 @@
+/.local/
+**/bin/
+**/obj/
+**/node_modules/
+/.review/work/
+**/.env
+**/.env.*
+!**/.env.example
+**/local.props
+**/.claude/settings.local.json

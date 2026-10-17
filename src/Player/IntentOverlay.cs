@@ -27,7 +27,7 @@ internal sealed class IntentOverlay : IDisposable
     private string _description = "";
     private MoveGraph? _graph;
     private MoveReference? _reference;
-    private string _renderedDescription = "";
+    private string _renderedSnapshot = "";
     private bool _compactReference;
     private BoxContainer? _referenceBody;
     private VBoxContainer? _referenceRoot;
@@ -223,10 +223,10 @@ internal sealed class IntentOverlay : IDisposable
             _graphTip.ZIndex = 10;
             _graphTip.Scale = Vector2.One / _creature.Hitbox.GetGlobalTransform().Scale;
         }
-        if (_renderedDescription != _description)
+        if (_renderedSnapshot != _snapshot)
         {
             RenderNativeGraph(_graphTip!);
-            _renderedDescription = _description;
+            _renderedSnapshot = _snapshot;
         }
     }
 
@@ -275,7 +275,7 @@ internal sealed class IntentOverlay : IDisposable
             else if (!_compactReference)
             {
                 _compactReference = true;
-                _renderedDescription = "";
+                _renderedSnapshot = "";
             }
             else
             {
@@ -393,7 +393,7 @@ internal sealed class IntentOverlay : IDisposable
                 if (section.Selection is not null) { node.GetChild<Control>(3).CustomMinimumSize = new(0, 18); }
             }
             grid.ResetSize();
-    
+
             var originals = _graph!.Nodes.ToDictionary(node => node.Id);
             var ruleSources = sharedChoice || section.ConditionalScope ? Enumerable.Empty<MoveNode>() : _graph.Nodes;
             var restrictions = ruleSources.SelectMany(node => node.Edges)
@@ -649,7 +649,7 @@ internal sealed class IntentOverlay : IDisposable
         _graphTip = null;
         _nativeTipSet = null;
         _nativeTipContainer = null;
-        _renderedDescription = "";
+        _renderedSnapshot = "";
         _referenceViews.Clear();
         _referenceBody = null;
         _referenceRoot = null;

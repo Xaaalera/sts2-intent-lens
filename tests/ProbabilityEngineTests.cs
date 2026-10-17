@@ -162,8 +162,20 @@ public sealed class ProbabilityEngineTests
     [Fact]
     public void Codec_preserves_null_weights_and_probability_mass()
     {
-        var graph = Graph(Move("A", "choice"), Move("B", "A"), Choice(new MoveEdge("B", 3)));
-        var result = GraphCodec.DecodeForecast(GraphCodec.Encode(ProbabilityEngine.Evaluate(GraphCodec.Decode(GraphCodec.Encode(graph)))));
+        var graph = new MoveGraph("A", ["B", "A"], [Move("A", "choice"), Move("B", "A"),
+            new("choice", "Choose", "random", false, [new("B", null, "CanRepeatXTimes", 2, 1)])]);
+        var decoded = GraphCodec.Decode(GraphCodec.Encode(graph));
+        Assert.Equal(graph.Current, decoded.Current);
+        Assert.Equal(graph.History, decoded.History);
+        Assert.Equal(graph.Nodes.Select(node => (node.Id, node.Title, node.Kind, node.Logged)),
+            decoded.Nodes.Select(node => (node.Id, node.Title, node.Kind, node.Logged)));
+        var edge = Assert.Single(decoded.Nodes.Single(node => node.Id == "choice").Edges);
+        Assert.Equal("B", edge.Target);
+        Assert.Null(edge.Weight);
+        Assert.Equal("CanRepeatXTimes", edge.Repeat);
+        Assert.Equal(2, edge.MaxTimes);
+        Assert.Equal(1, edge.Cooldown);
+        var result = GraphCodec.DecodeForecast(GraphCodec.Encode(ProbabilityEngine.Evaluate(decoded)));
         Assert.Equal(1, result.Steps[0].Known.Values.Sum() + result.Steps[0].Unknown);
     }
 }

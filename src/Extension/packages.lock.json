@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net9.0": {
+      "Sts2.ModDevkit.Contracts": {
+        "type": "Direct",
+        "requested": "[0.1.0-alpha.1, )",
+        "resolved": "0.1.0-alpha.1",
+        "contentHash": "62kbOBHCkOhfVTtnE4F+tRgoSWUlX4LPfIoz46jYuXqmtzmxYT/fEpZdxW5V2mBGdjrvn4aHiRGvIkzxXJWQxA=="
+      }
+    }
+  }
+}

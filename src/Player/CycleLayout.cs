@@ -74,7 +74,11 @@ internal sealed record CycleLayout(IReadOnlyDictionary<string, Vector2> Position
             foreach (var edge in source.Edges.Where(edge => positions.ContainsKey(edge.Target)))
             {
                 var target = ordered[indices[edge.Target]];
-                connections.Add(Route(source, target, regions, indices[target.Id] == indices[source.Id] + 1, lane));
+                var incoming = ordered.Where(node => indices[target.Id] != indices[node.Id] + 1 &&
+                    node.Edges.Any(candidate => candidate.Target == target.Id)).Select(node => node.Id).ToArray();
+                var spacing = incoming.Length <= 1 ? 0 : Math.Min(12, (regions[target.Id].Size.X - 24) / (incoming.Length - 1));
+                var incomingOffset = (Array.IndexOf(incoming, source.Id) - (incoming.Length - 1) / 2f) * spacing;
+                connections.Add(Route(source, target, regions, indices[target.Id] == indices[source.Id] + 1, lane, incomingOffset));
                 if (indices[target.Id] != indices[source.Id] + 1) { lane++; }
             }
         }
@@ -98,7 +102,7 @@ internal sealed record CycleLayout(IReadOnlyDictionary<string, Vector2> Position
         return new(positions, [loop], new(Math.Max(212, right + 32), regions.Values.Max(region => region.Position.Y + region.Size.Y)));
     }
 
-    private static Connection Route(MoveNode source, MoveNode target, IReadOnlyDictionary<string, Region> regions, bool adjacent, int lane)
+    private static Connection Route(MoveNode source, MoveNode target, IReadOnlyDictionary<string, Region> regions, bool adjacent, int lane, float incomingOffset)
     {
         var from = regions[source.Id];
         var to = regions[target.Id];
@@ -141,10 +145,25 @@ internal sealed record CycleLayout(IReadOnlyDictionary<string, Vector2> Position
         }
         if (source.Id == target.Id)
         {
-            var right = from.Position.X + from.Size.X;
-            points = [new(right, from.IntentCenter.Y), new(right + Gap / 2f, from.IntentCenter.Y),
-                new(right + Gap / 2f, laneY), new(from.IntentCenter.X, laneY), new(from.IntentCenter.X, from.Position.Y - 2)];
-            label = new(from.IntentCenter.X + 4, laneY - 22);
+            if (regions.Values.Any(region => region.Position.Y == from.Position.Y && region.Position.X < from.Position.X))
+            {
+                var right = from.Position.X + from.Size.X;
+                var startRight = new Vector2(right - 8, from.Position.Y - 2);
+                if (source.Edges.Any(edge => edge.Target != source.Id))
+                {
+                    var endTop = new Vector2(to.IntentCenter.X + incomingOffset, to.Position.Y - 2);
+                    points = [startRight, new(right + Gap / 2f, startRight.Y), new(right + Gap / 2f, laneY), new(endTop.X, laneY), endTop];
+                    return new(source.Id, target.Id, points, new(from.IntentCenter.X - 24, laneY - 22));
+                }
+                var endRight = from.IntentCenter + new Vector2(from.IntentWidth / 2 + 4, 0);
+                points = [startRight, new(startRight.X, laneY), new(right + Gap / 2f, laneY), new(right + Gap / 2f, endRight.Y), endRight];
+                return new(source.Id, target.Id, points, new(from.IntentCenter.X - 24, laneY - 22));
+            }
+            var left = Math.Max(4, from.Position.X - Gap / 2f);
+            var start = new Vector2(from.Position.X + 8, from.Position.Y - 2);
+            var end = from.IntentCenter - new Vector2(from.IntentWidth / 2 + 4, 0);
+            points = [start, new(start.X, laneY), new(left, laneY), new(left, end.Y), end];
+            label = new(from.Position.X + 4, laneY - 22);
         }
         else if (adjacent)
         {
@@ -158,7 +177,7 @@ internal sealed record CycleLayout(IReadOnlyDictionary<string, Vector2> Position
         else
         {
             points = [new(from.IntentCenter.X, from.Position.Y - 2), new(from.IntentCenter.X, laneY),
-                new(to.IntentCenter.X, laneY), new(to.IntentCenter.X, to.Position.Y - 2)];
+                new(to.IntentCenter.X + incomingOffset, laneY), new(to.IntentCenter.X + incomingOffset, to.Position.Y - 2)];
             label = new((from.IntentCenter.X + to.IntentCenter.X) / 2 - 24, laneY - 22);
         }
         return new(source.Id, target.Id, points, label);

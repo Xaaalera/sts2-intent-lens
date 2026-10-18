@@ -1,6 +1,8 @@
 name: review-gate
 on:
   pull_request:
+  push:
+    branches: [main]
 permissions:
   contents: read
 jobs:
@@ -15,5 +17,17 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      - name: Use the actual pushed range for main checks
+        if: github.event_name == 'push'
+        env:
+          PREVIOUS_SHA: ${{ github.event.before }}
+        run: |
+          if ! [[ "$PREVIOUS_SHA" =~ ^[0-9a-f]{40}$ ]] || [[ "$PREVIOUS_SHA" == 0000000000000000000000000000000000000000 ]]; then
+            echo 'A valid previous main revision is required for publication checks.'
+            exit 1
+          fi
+          git cat-file -e "${PREVIOUS_SHA}^{commit}"
       - name: Scan changes for secrets
-        run: npm run review:gate -- --base origin/main --secrets-only
+        env:
+          REVIEW_BASE: ${{ github.event_name == 'push' && github.event.before || 'origin/main' }}
+        run: npm run review:gate -- --base "$REVIEW_BASE" --secrets-only

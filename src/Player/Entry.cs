@@ -49,7 +49,7 @@ public static class Entry
         try
         {
             var room = NCombatRoom.Instance;
-            var creatures = room?.CreatureNodes.Where(creature => creature.Entity.Monster is not null).ToArray() ?? [];
+            var creatures = room?.CreatureNodes.Where(creature => creature.Entity.IsEnemy && creature.Entity.Monster is not null).ToArray() ?? [];
             var focused = creatures.FirstOrDefault(creature => creature.IsFocused);
             if (focused is not null) { _expandedOwner = focused; }
             else if (_expandedOwner is not null && (!Overlays.TryGetValue(_expandedOwner, out var previous) || !previous.RetainHover)) { _expandedOwner = null; }
@@ -102,7 +102,7 @@ public static class Entry
     {
         if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("STS2_DEVKIT_SESSION"))) { throw new InvalidOperationException("Owned SDK session required"); }
         _forced = index >= 0 && index < Overlays.Count && NCombatRoom.Instance is { } room
-            ? Array.IndexOf(room.CreatureNodes.Where(creature => creature.Entity.Monster is not null).ToArray(), Overlays.Keys.ElementAt(index))
+            ? Array.IndexOf(room.CreatureNodes.Where(creature => creature.Entity.IsEnemy && creature.Entity.Monster is not null).ToArray(), Overlays.Keys.ElementAt(index))
             : -1;
         Tick();
     }

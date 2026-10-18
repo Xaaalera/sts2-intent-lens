@@ -122,6 +122,14 @@ public static class StateSnapshot
     public static IReadOnlyDictionary<(string Branch, string Target), string> DescribeConditions(MonsterModel monster, MoveGraph graph)
     {
         var descriptions = new Dictionary<(string Branch, string Target), string>();
+        if (monster.GetType().FullName == "MegaCrit.Sts2.Core.Models.Monsters.BowlbugRock" &&
+            graph.Nodes.FirstOrDefault(node => node.Id == "POST_HEADBUTT") is { Kind: "conditional", Edges.Count: 2 } rockBranch &&
+            rockBranch.Edges.Select(edge => edge.Target).ToHashSet(StringComparer.Ordinal).SetEquals(["HEADBUTT_MOVE", "DIZZY_MOVE"]))
+        {
+            descriptions[(rockBranch.Id, "DIZZY_MOVE")] = TextCatalog.Get("FullyBlocked");
+            descriptions[(rockBranch.Id, "HEADBUTT_MOVE")] = TextCatalog.Get("Otherwise");
+            return descriptions;
+        }
         if (monster.GetType().FullName != "MegaCrit.Sts2.Core.Models.Monsters.Queen") { return descriptions; }
         foreach (var branch in graph.Nodes.Where(node => node.Kind == "conditional" && (node.Id is "YOURE_MINE_NOW_BRANCH" or "BURN_BRIGHT_FOR_ME_BRANCH")))
         {
@@ -168,7 +176,7 @@ public static class StateSnapshot
             var move = (MoveState)state;
             var follow = move.FollowUpState is null ? move.FollowUpStateId : states.FirstOrDefault(pair => ReferenceEquals(pair.Value, move.FollowUpState)).Key;
             return new(id, titles.GetValueOrDefault(id,
-                titles.GetValueOrDefault(Regex.Replace(id, @"_?\d+$", ""), Humanize(id))), "move", true, follow is null ? [] : [new(follow)]);
+                titles.GetValueOrDefault(Regex.Replace(id, @"_?\d+(?=_MOVE$|$)", ""), Humanize(id))), "move", true, follow is null ? [] : [new(follow)]);
         }
         if (state.GetType() == typeof(RandomBranchState))
         {

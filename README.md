@@ -47,7 +47,7 @@ dotnet test tests/IntentLens.Tests.csproj
 
 Local Release0.1.1 ZIP is available under `.local/packages/IntentLens-0.1.1-sts2-0.107.1-reviewed.zip`, with installation instructions and checksums. Its extracted DLL/manifest passed native loader/main-menu startup in an isolated Steam-disabled copy with only the two declared libraries.161 Release tests pass. Physical standalone-combat, Steam-enabled startup and Workshop delivery remain separate checks.
 
-With the target game closed, copy only `src/Player/bin/Release/net9.0/IntentLens.dll` and `IntentLens.json` into `mods/IntentLens/`. Install complete compatible BaseLib/RitsuLib runtimes separately. The player has no SDK assembly reference and runs its local engine when the SDK host/extension is absent.
+With the target game closed, copy `src/Player/bin/Release/net9.0/IntentLens.dll`, `IntentLens.json` and `LICENSE` into `mods/IntentLens/`. Install complete compatible BaseLib/RitsuLib runtimes separately. The player has no SDK assembly reference and runs its local engine when the SDK host/extension is absent.
 
 The arrow image is loaded from the game at runtime without recoloring or packaging it. The small connector gap uses engine Line2D primitives with orthogonal routes and StsColors.gold; the stock upgrade arrow is a static image. Interactive targeting-arrow controllers and their cursor effects are not used. Other API lanes need verification.
 

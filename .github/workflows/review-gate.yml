@@ -26,6 +26,8 @@ jobs:
             echo 'A valid previous main revision is required for publication checks.'
             exit 1
           fi
-          git update-ref refs/remotes/origin/main "$PREVIOUS_SHA"
+          git cat-file -e "${PREVIOUS_SHA}^{commit}"
       - name: Scan changes for secrets
-        run: npm run review:gate -- --base origin/main --secrets-only
+        env:
+          REVIEW_BASE: ${{ github.event_name == 'push' && github.event.before || 'origin/main' }}
+        run: npm run review:gate -- --base "$REVIEW_BASE" --secrets-only

@@ -48,7 +48,7 @@ internal sealed class IntentOverlay : IDisposable
         _creature = creature;
         _refresh = refresh;
         _summary = new HBoxContainer { Name = "IntentLensSummary", MouseFilter = Control.MouseFilterEnum.Ignore, ZIndex = 2,
-            Modulate = new Color(1, 1, 1, .60f) };
+            Modulate = new Color(1, 1, 1, .50f) };
         _summary.AddThemeConstantOverride("separation", 14);
         creature.Hitbox.AddChild(_summary);
         creature.Hitbox.MouseEntered += _refresh;
@@ -81,7 +81,7 @@ internal sealed class IntentOverlay : IDisposable
         _summary.ResetSize();
         var intentBounds = _creature.IntentContainer.GetGlobalRect();
         var intentAnchor = _creature.Hitbox.GetGlobalTransform().AffineInverse() * new Vector2(intentBounds.GetCenter().X, intentBounds.Position.Y);
-        _summary.Position = new(intentAnchor.X - _summary.Size.X / 2, intentAnchor.Y - _summary.Size.Y - 12);
+        _summary.Position = new(intentAnchor.X - _summary.Size.X / 2, intentAnchor.Y - _summary.Size.Y - 20);
         PrepareNativeGraph();
         if (_expandRequested) { UpdateNativeTip(); }
         else
@@ -329,7 +329,12 @@ internal sealed class IntentOverlay : IDisposable
             var grid = new GridContainer { Name = "IntentLensActionGrid", Columns = Math.Max(1, section.Selection is null &&
                 graph.Nodes.All(node => node.Kind == "move" && node.Edges.Count <= 1) ? Math.Min(wrappedColumns, graph.Nodes.Count) : graph.Nodes.Count),
                 Position = new(_compactReference ? 12 : 20, section.Selection is null ? Math.Max(24, CycleLayout.TopInset(graph, graph.Nodes) - (_compactReference ? 24 : 0)) : 48), MouseFilter = Control.MouseFilterEnum.Ignore };
-            grid.AddThemeConstantOverride("h_separation", CycleLayout.CellSize * 2);
+            var labelledGap = section.ConditionalScope ? CycleLayout.CellSize * 2 : section.Reference.Links
+                .Where(link => link.ConditionLabel is not null && link.Source != link.Target)
+                .Select(link => PreloadManager.Cache.GetAsset<Font>("res://themes/kreon_bold_glyph_space_two.tres")
+                    .GetStringSize(string.Format(CultureInfo.InvariantCulture, TextCatalog.Get("ChanceFormat"), link.ConditionLabel), fontSize: 14).X + 16)
+                .DefaultIfEmpty(CycleLayout.CellSize * 2).Max();
+            grid.AddThemeConstantOverride("h_separation", (int)MathF.Ceiling(labelledGap / CycleLayout.CellSize) * CycleLayout.CellSize);
             if (grid.Columns < graph.Nodes.Count) { grid.AddThemeConstantOverride("v_separation", CycleLayout.CellSize * 4); }
             canvas.AddChild(grid);
             var titleHeight = 0f;

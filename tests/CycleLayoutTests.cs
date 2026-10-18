@@ -349,6 +349,52 @@ public sealed class CycleLayoutTests
         }
     }
 
+    [Fact]
+    public void Repeating_final_attack_enters_from_right_away_from_incoming_buff_arrow()
+    {
+        var layout = Layout(new("attack", ["attack"], [Move("attack", "buff"), Move("buff", "attack2"), Move("attack2", "attack2")]));
+        AssertOrthogonal(layout);
+        var incoming = layout.Connections.Single(connection => connection.Source == "buff");
+        var repeat = layout.Connections.Single(connection => connection.Source == "attack2");
+        Assert.True(repeat.Points[^2].X > repeat.Points[^1].X);
+        Assert.True(repeat.Points[^1].X > incoming.Points[^1].X);
+        Assert.All(repeat.Points, point => Assert.True(point.X > incoming.Points[^1].X));
+        Assert.All(repeat.Points, point => Assert.InRange(point.X, 0, layout.Size.X));
+    }
+
+    [Fact]
+    public void Conditional_repeat_and_recovery_do_not_share_arrow_segments()
+    {
+        var graph = new MoveGraph("attack", ["attack"],
+            [new("attack", "Attack", "move", true, [new("attack"), new("stun")]), Move("stun", "attack")]);
+        var layout = Layout(graph);
+        AssertOrthogonal(layout);
+        var returning = layout.Connections.Where(connection => connection.Target == "attack").ToArray();
+        Assert.NotEqual(returning[0].Points[^1], returning[1].Points[^1]);
+        var repeat = returning.Single(connection => connection.Source == "attack");
+        var recovery = returning.Single(connection => connection.Source == "stun");
+        Assert.True(repeat.Points[^2].X < layout.Positions["attack"].X);
+        Assert.True(repeat.Points[^1].X > repeat.Points[^2].X);
+        Assert.Equal(repeat.Points[^2].Y, repeat.Points[^1].Y);
+        Assert.True(recovery.Points[^1].Y > recovery.Points[^2].Y);
+        foreach (var first in layout.Connections)
+        {
+            foreach (var second in layout.Connections.Where(connection => !ReferenceEquals(connection, first)))
+            {
+                foreach (var (firstStart, firstEnd) in first.Points.Zip(first.Points.Skip(1)))
+                foreach (var (secondStart, secondEnd) in second.Points.Zip(second.Points.Skip(1)))
+                {
+                    Assert.False(firstStart.X == firstEnd.X && secondStart.X == secondEnd.X && firstStart.X == secondStart.X &&
+                        Math.Min(Math.Max(firstStart.Y, firstEnd.Y), Math.Max(secondStart.Y, secondEnd.Y)) >
+                        Math.Max(Math.Min(firstStart.Y, firstEnd.Y), Math.Min(secondStart.Y, secondEnd.Y)));
+                    Assert.False(firstStart.Y == firstEnd.Y && secondStart.Y == secondEnd.Y && firstStart.Y == secondStart.Y &&
+                        Math.Min(Math.Max(firstStart.X, firstEnd.X), Math.Max(secondStart.X, secondEnd.X)) >
+                        Math.Max(Math.Min(firstStart.X, firstEnd.X), Math.Min(secondStart.X, secondEnd.X)));
+                }
+            }
+        }
+    }
+
     private static CycleLayout Layout(MoveGraph graph, bool measured = false)
     {
         var regions = new Dictionary<string, CycleLayout.Region>();

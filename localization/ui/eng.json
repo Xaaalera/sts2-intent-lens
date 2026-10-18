@@ -39,5 +39,7 @@
     "CycleTitle":  "Move cycle (base chances)",
     "StepsExplanation":  "Arrows show turn order after the current intent. Percentages describe possible actions.",
     "BeastCharging":  "Phase 1 - charging",
-    "BeastAwakened":  "Phase 2 - after {0} ends"
+    "BeastAwakened":  "Phase 2 - after {0} ends",
+    "FullyBlocked": "Full block",
+    "Otherwise": "Otherwise"
 }

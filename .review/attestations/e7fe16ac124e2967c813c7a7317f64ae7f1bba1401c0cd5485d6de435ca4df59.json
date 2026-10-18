@@ -1,0 +1,38 @@
+{
+  "diffHash": "e7fe16ac124e2967c813c7a7317f64ae7f1bba1401c0cd5485d6de435ca4df59",
+  "commitSha": "7d4c3df1ced1e3a7a938eb067a7a5eee2cc720d0",
+  "perAgent": {
+    "craft": {
+      "verdict": "PASS",
+      "score": 8,
+      "reviewedCommit": "7d4c3df1ced1e3a7a938eb067a7a5eee2cc720d0",
+      "reviewer": "review_craft"
+    },
+    "architecture": {
+      "verdict": "PASS",
+      "score": 8,
+      "reviewedCommit": "7d4c3df1ced1e3a7a938eb067a7a5eee2cc720d0",
+      "reviewer": "review_release_architecture"
+    },
+    "tests": {
+      "verdict": "PASS",
+      "score": 8,
+      "reviewedCommit": "7d4c3df1ced1e3a7a938eb067a7a5eee2cc720d0",
+      "reviewer": "review_release_tests"
+    },
+    "docs": {
+      "verdict": "PASS",
+      "score": 9,
+      "reviewedCommit": "7d4c3df1ced1e3a7a938eb067a7a5eee2cc720d0",
+      "reviewer": "review_docs"
+    },
+    "security": {
+      "verdict": "PASS",
+      "score": 9,
+      "reviewedCommit": "7d4c3df1ced1e3a7a938eb067a7a5eee2cc720d0",
+      "reviewer": "review_security_final"
+    }
+  },
+  "overall": "PASS",
+  "timestamp": "2026-10-18T17:43:33.729Z"
+}

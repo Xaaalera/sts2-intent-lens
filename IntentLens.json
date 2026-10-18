@@ -1,0 +1,12 @@
+{
+  "id": "IntentLens",
+  "name": "Intent Lens",
+  "author": "Xaaalera",
+  "description": "Two-step enemy action probabilities and a full move graph on hover.",
+  "version": "0.1.1",
+  "has_dll": true,
+  "has_pck": false,
+  "affects_gameplay": false,
+  "min_game_version": "0.107.1",
+  "dependencies": [{ "id": "BaseLib" }, { "id": "STS2-RitsuLib" }]
+}

@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <Compile Include="../Core/*.cs" LinkBase="Core" />
+    <EmbeddedResource Include="../../localization/ui/*.json" LogicalName="IntentLens.Localization.%(Filename)%(Extension)" />
+    <PackageReference Include="Sts2.ModDevkit.Contracts" Version="0.1.0-alpha.1" />
+  </ItemGroup>
+</Project>

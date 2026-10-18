@@ -1,0 +1,9 @@
+{
+  "title": "Intent Lens — Enemy Intent Preview",
+  "description": "See possible enemy actions for the next two steps, with probabilities, and hover an enemy to inspect its action cycle.\n\n[h2]Plan around enemy behavior[/h2]\n[list]\n[*]Compact previews above enemies show up to two future action steps.\n[*]Hover an enemy to see an expanded action diagram with transitions and supported phase conditions.\n[*]Native intent icons show damage and multiattacks; smaller percentages show action chances.\n[*]Future previews are faded to distinguish them from the current intent.\n[/list]\n\n[h2]Probabilities, not guaranteed outcomes[/h2]\nIntent Lens shows possible actions based on enemy behavior and public action history. It does not read future random rolls or change enemy decisions. Unsupported dynamic conditions remain uncertain.\n\n[h2]Requirements[/h2]\nSubscribe to BaseLib and RitsuLib as well as Intent Lens, wait for downloads to finish, and enable the mods in the game's Mod Settings. The SDK is not required.\n\n[h2]Languages[/h2]\nEnglish and Russian. The interface follows the game's language, with English fallback.\n\n[h2]Compatibility[/h2]\nVersion 0.1.1 was tested locally on Windows with Slay the Spire 2 0.107.1, BaseLib 3.4.7 and RitsuLib 0.6.7. Compatibility with newer releases and multiplayer has not been verified.\n\n[h2]Bug reports[/h2]\nInclude your game and mod versions, enemy name, what you expected and what appeared. A screenshot and relevant log excerpt help diagnose layout or loading problems.",
+  "visibility": "private",
+  "changeNote": "Initial private Workshop test of Intent Lens 0.1.1.",
+  "tags": ["QoL", "Utility"],
+  "dependencies": [3737335127, 3747602295],
+  "contentDescriptors": []
+}

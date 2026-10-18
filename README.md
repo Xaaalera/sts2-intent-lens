@@ -8,6 +8,10 @@ Target baseline: Windows, StS2 0.107.1, BaseLib 3.4.7 and RitsuLib 0.6.7/API-0.1
 
 Repository content is English. See [AGENTS.md](AGENTS.md).
 
+## Workshop listing
+
+[workshop.json](workshop.json) owns the English Workshop title, description, QoL/Utility tags, private test visibility and BaseLib/RitsuLib required-item IDs. This is a prepared listing, not a published Workshop item. Show listing changes to the owner in Russian before uploading. Use the [workspace publishing procedure](https://github.com/Xaaalera/sts2-workshop/blob/main/docs/workflow.md#steam-workshop-publishing); the local native startup check below does not establish Workshop delivery or current dependency compatibility.
+
 ## Behavior
 
 - Up to two future-intent groups appear above the native current-action indicator. The row follows its actual IntentContainer top-center with12 local units of clearance instead of a fixed hitbox offset. Native intent widgets animate and show damage, including the game's multiattack notation. Smaller chances appear below in parentheses; compact chances and the yellow step arrow follow the same native bob animation.
@@ -37,7 +41,7 @@ dotnet build src/Player/IntentLens.csproj -c Release
 dotnet test tests/IntentLens.Tests.csproj
 ```
 
-Local Release0.1.1 ZIP is available under `.local/packages/IntentLens-0.1.1-sts2-0.107.1.zip`, with installation instructions and checksums. Its extracted DLL/manifest passed native loader/main-menu startup in an isolated Steam-disabled copy with only the two declared libraries.161 Release tests pass. Physical standalone-combat, Steam-enabled startup and Workshop delivery remain separate checks.
+Local Release0.1.1 ZIP is available under `.local/packages/IntentLens-0.1.1-sts2-0.107.1-reviewed.zip`, with installation instructions and checksums. Its extracted DLL/manifest passed native loader/main-menu startup in an isolated Steam-disabled copy with only the two declared libraries.161 Release tests pass. Physical standalone-combat, Steam-enabled startup and Workshop delivery remain separate checks.
 
 With the target game closed, copy only `src/Player/bin/Release/net9.0/IntentLens.dll` and `IntentLens.json` into `mods/IntentLens/`. Install complete compatible BaseLib/RitsuLib runtimes separately. The player has no SDK assembly reference and runs its local engine when the SDK host/extension is absent.
 

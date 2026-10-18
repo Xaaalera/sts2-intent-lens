@@ -10,7 +10,7 @@ Repository content is English. See [AGENTS.md](AGENTS.md).
 
 ## Workshop listing
 
-[workshop.json](workshop.json) owns the English Workshop title, description, QoL/Utility tags, private test visibility and BaseLib/RitsuLib required-item IDs. This is a prepared listing, not a published Workshop item. Show listing changes to the owner in Russian before uploading. Use the [workspace publishing procedure](https://github.com/Xaaalera/sts2-workshop/blob/main/docs/workflow.md#steam-workshop-publishing); the local native startup check below does not establish Workshop delivery or current dependency compatibility.
+[workshop.json](workshop.json) owns the English Workshop title, description, QoL/Utility tags, private test visibility and BaseLib/RitsuLib required-item IDs. This is a prepared listing, not a published Workshop item. Show listing changes to the owner in Russian before uploading. Use the [workspace publishing procedure](https://github.com/Xaaalera/sts2-workshop/blob/feat/workshop-publication/docs/workflow.md#steam-workshop-publishing); the local native startup check below does not establish Workshop delivery or current dependency compatibility.
 
 ## Behavior
 

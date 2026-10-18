@@ -1,6 +1,6 @@
 # StS2 Intent Lens
 
-Private gameplay mod for Slay the Spire 2. Show two upcoming action distributions beside each enemy; hover that enemy to expand its complete move graph.
+Gameplay mod for Slay the Spire 2. Show two upcoming action distributions beside each enemy; hover that enemy to expand its complete move graph.
 
 Probabilities describe possible actions, not seeded future selections. Never inspect or advance RNG. Unsupported dynamic conditions remain explicitly uncertain.
 
@@ -10,7 +10,11 @@ Repository content is English. See [AGENTS.md](AGENTS.md).
 
 ## Workshop listing
 
-[workshop.json](workshop.json) owns the English Workshop title, description, QoL/Utility tags, private test visibility and BaseLib/RitsuLib required-item IDs. This is a prepared listing, not a published Workshop item. Show listing changes to the owner in Russian before uploading. Use the [workspace publishing procedure](https://github.com/Xaaalera/sts2-workshop/blob/feat/workshop-publication/docs/workflow.md#steam-workshop-publishing); the local native startup check below does not establish Workshop delivery or current dependency compatibility.
+[workshop.json](workshop.json) owns the English Workshop title, description, QoL/Utility tags, owner-authorized public visibility and BaseLib/RitsuLib required-item IDs. The listing is prepared; no Workshop delivery acceptance is claimed. Show listing changes to the owner in Russian before uploading. The local native startup check below does not establish Workshop delivery or current dependency compatibility.
+
+To publish as the verified active Steam account, use [Mega Crit's official uploader](https://github.com/megacrit/sts2-mod-uploader/releases/tag/v0.2.0). Create an ignored workspace with `ModUploader.exe new -w <workspace>`. Copy workshop.json into it, place the reviewed IntentLens.dll, IntentLens.json and LICENSE in content/, and supply an approved image.png smaller than1MB. Stage no SDK/game/framework binaries. Keep BaseLib3737335127 and RitsuLib3747602295 in every upload's dependencies; v0.2.0 clears dependencies when the field is omitted/null. Required-item references do not pin their binary versions.
+
+Run `ModUploader.exe upload -w <workspace>` only with owner authorization and completed independent publication reviews. Preserve the resulting mod_id.txt and item URL for updates. On failure inspect actual remote state/logs before retrying: item creation/content can succeed before the ID file is saved. Verify the remote owner, visibility, description, tags, preview and dependencies; warning-only setters can fail despite a successful exit. Subscription/download/loading remains a separate acceptance step. Do not pass a bare existing directory to the executable to inspect it: that invokes upload immediately.
 
 ## Behavior
 
@@ -85,3 +89,7 @@ Desktop targets are1280x720,1600x900 and1920x1080, including intermediate widths
 ## Review
 
 Run `npm ci` and `npm run review:gate`. Attest only completed configured independent results using `npm run review:attest -- <results-file>`; never bypass the hook. Hosted CI scans secrets, not game behavior.
+
+## License
+
+Original project code and documentation are licensed under the [MIT License](LICENSE), copyright 2026 [Xaaalera](https://github.com/Xaaalera). Commercial use and redistribution are allowed; retain the copyright and license notice in distributed copies or substantial portions. Third-party code, dependencies and game assets retain their own licenses and ownership.

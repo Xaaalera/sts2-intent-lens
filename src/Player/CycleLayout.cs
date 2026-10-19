@@ -11,24 +11,24 @@ internal sealed record CycleLayout(IReadOnlyDictionary<string, Vector2> Position
     internal sealed record Connection(string Source, string Target, Vector2[] Points, Vector2 Label);
 
     internal static Vector2? Place(Vector2 size, Vector2 viewport, Vector2 preferred, float safeTop,
-        IReadOnlyList<(Vector2 Position, Vector2 Size)> obstacles, float? anchorX = null)
+        IReadOnlyList<(Vector2 Position, Vector2 Size)> obstacles, float? anchorX = null, float obstacleGap = 16)
     {
         const float margin = 16;
         var candidates = new List<Vector2> { preferred };
         foreach (var obstacle in obstacles)
         {
-            candidates.Add(new(obstacle.Position.X + obstacle.Size.X + margin, preferred.Y));
-            candidates.Add(new(obstacle.Position.X - size.X - margin, preferred.Y));
-            candidates.Add(new(preferred.X, obstacle.Position.Y - size.Y - margin));
-            candidates.Add(new(preferred.X, obstacle.Position.Y + obstacle.Size.Y + margin));
+            candidates.Add(new(obstacle.Position.X + obstacle.Size.X + obstacleGap, preferred.Y));
+            candidates.Add(new(obstacle.Position.X - size.X - obstacleGap, preferred.Y));
+            candidates.Add(new(preferred.X, obstacle.Position.Y - size.Y - obstacleGap));
+            candidates.Add(new(preferred.X, obstacle.Position.Y + obstacle.Size.Y + obstacleGap));
         }
         foreach (var candidate in candidates.OrderBy(candidate => candidate.Y > preferred.Y ? 1 : 0)
             .ThenBy(candidate => Vector2.DistanceSquared(candidate, preferred)))
         {
             if (anchorX is float center && (candidate.Y > preferred.Y || candidate.X > center || candidate.X + size.X < center)) { continue; }
             if (candidate.X < margin || candidate.Y < safeTop || candidate.X + size.X > viewport.X - margin || candidate.Y + size.Y > viewport.Y - margin) { continue; }
-            if (obstacles.Any(obstacle => candidate.X < obstacle.Position.X + obstacle.Size.X + margin && candidate.X + size.X + margin > obstacle.Position.X &&
-                candidate.Y < obstacle.Position.Y + obstacle.Size.Y + margin && candidate.Y + size.Y + margin > obstacle.Position.Y)) { continue; }
+            if (obstacles.Any(obstacle => candidate.X < obstacle.Position.X + obstacle.Size.X + obstacleGap && candidate.X + size.X + obstacleGap > obstacle.Position.X &&
+                candidate.Y < obstacle.Position.Y + obstacle.Size.Y + obstacleGap && candidate.Y + size.Y + obstacleGap > obstacle.Position.Y)) { continue; }
             return candidate;
         }
         return null;

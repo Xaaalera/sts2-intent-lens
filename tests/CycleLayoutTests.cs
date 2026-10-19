@@ -174,6 +174,22 @@ public sealed class CycleLayoutTests
     }
 
     [Fact]
+    public void English_queen_reference_fits_with_one_grid_cell_clearance_without_moving_native_tip()
+    {
+        var size = new System.Numerics.Vector2(795, 169);
+        var preferred = new System.Numerics.Vector2(1109, 112);
+        var nativeTip = (Position: new System.Numerics.Vector2(1040.2f, 292.2f), Size: new System.Numerics.Vector2(359, 117));
+        Assert.Null(CycleLayout.Place(size, new(1920, 1080), preferred, 112, [nativeTip], anchorX: 1530));
+        var placement = CycleLayout.Place(size, new(1920, 1080), preferred, 112, [nativeTip],
+            anchorX: 1530, obstacleGap: CycleLayout.CellSize);
+        Assert.NotNull(placement);
+        Assert.Equal(preferred, placement.Value);
+        Assert.True(placement.Value.Y + size.Y + CycleLayout.CellSize <= nativeTip.Position.Y);
+        Assert.InRange(placement.Value.X, 16, 1920 - size.X - 16);
+        Assert.Equal(new System.Numerics.Vector2(1040.2f, 292.2f), nativeTip.Position);
+    }
+
+    [Fact]
     public void No_safe_space_does_not_allow_a_reference_under_the_HUD()
     {
         var placement = CycleLayout.Place(new(700, 500), new(800, 600), new(40, 42), 112, []);

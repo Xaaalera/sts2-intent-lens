@@ -268,6 +268,8 @@ internal sealed class IntentOverlay : IDisposable
             .Select(bounds =>
             (new System.Numerics.Vector2(bounds.Position.X, bounds.Position.Y), new System.Numerics.Vector2(bounds.Size.X, bounds.Size.Y))).ToArray();
         var placement = CycleLayout.Place(new(graphSize.X, graphSize.Y), new(viewport.X, viewport.Y), new(preferred.X, preferred.Y), safeTop, obstacles, anchor.GetCenter().X);
+        placement ??= CycleLayout.Place(new(graphSize.X, graphSize.Y), new(viewport.X, viewport.Y), new(preferred.X, preferred.Y), safeTop, obstacles,
+            anchor.GetCenter().X, obstacleGap: CycleLayout.CellSize);
         if (placement is null)
         {
             if (_referenceViews.Any(view => view.Grid.GetThemeConstant("h_separation") > CycleLayout.CellSize))
